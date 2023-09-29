@@ -1,5 +1,5 @@
 import { HeartIcon } from "@heroicons/react/24/outline";
-function Navbar() {
+function Navbar({ numbOfResult, loader }) {
   return (
     <nav className="navbar">
       <div className="navbar__logo">
@@ -7,7 +7,10 @@ function Navbar() {
         Rick And Morty
       </div>
       <input type="text" className="text-field" placeholder="search ..." />
-      <div className="navbar__result"> Found X Result</div>
+      <div className="navbar__result">
+        {" "}
+        {loader ? "Loading Data" : `Found ${numbOfResult} Result`}
+      </div>
       <button className="heart">
         <HeartIcon className="icon" />
         <span className="badge">5</span>

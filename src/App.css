@@ -126,6 +126,11 @@
   color: var(--slate-200);
 }
 
+.line { 
+  border-bottom: .5rem solid var(--slate-200);
+
+}
+
 .status {
   display: inline-block;
   width: 0.7rem;
@@ -136,6 +141,10 @@
 
 .status.red {
   background-color: var(--rose-600);
+}
+
+.status.alien {
+  background-color: rgb(221, 152, 24);
 }
 
 .character-detail {
@@ -230,6 +239,13 @@
   padding: 0.5rem 0;
   /* cursor: pointer; */
 }
+
+.loader-text {
+  color: var(--slate-400);
+  font-size: 1.5rem;
+  text-align: center;
+}
+
 
 @media (min-width: 768px) {
   .character-detail {
