@@ -1,9 +1,15 @@
 import { EyeIcon } from "@heroicons/react/24/outline";
-function CharacterList({ characters }) {
+import { XCircleIcon } from "@heroicons/react/24/solid";
+function CharacterList({ characters, onSelectCharacter, selectedId }) {
   return (
     <div className="characters-list">
       {characters.map((item) => (
-        <Character key={item.id} item={item} />
+        <Character
+          key={item.id}
+          item={item}
+          onSelectCharacter={onSelectCharacter}
+          selectedId={selectedId}
+        />
       ))}
     </div>
   );
@@ -11,9 +17,11 @@ function CharacterList({ characters }) {
 
 export default CharacterList;
 
-function Character({ item }) {
+function Character({ item, onSelectCharacter, selectedId }) {
   return (
-    <div className="list__item">
+    <div
+      className={selectedId === item.id ? "list__item selected " : "list__item"}
+    >
       <img src={item.image} alt={item.name} />
       <h3 className="name">
         {item.gender === "Male" ? "🧑" : "👩"} {item.name}
@@ -31,8 +39,8 @@ function Character({ item }) {
         <span> {item.status} </span>
         <span> - {item.species}</span>
       </div>
-      <button className="icon red">
-        <EyeIcon />
+      <button className="icon red" onClick={() => onSelectCharacter(item.id)}>
+        {selectedId === item.id ? <XCircleIcon /> : <EyeIcon />}
       </button>
     </div>
   );

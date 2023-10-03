@@ -16,6 +16,7 @@ function App() {
   const [character, setCharacter] = useState([]);
   const [isLoading, setIsLoader] = useState(false);
   const [query, setQuery] = useState("");
+  const [selectedId, setSelectedId] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -36,6 +37,10 @@ function App() {
     fetchData();
   }, [query]);
 
+  const handleSelectedCharacter = (id) => {
+    setSelectedId((prevId) => (prevId === id ? null : id));
+  };
+  console.log(selectedId);
   return (
     <div className="app">
       <Toaster
@@ -53,8 +58,16 @@ function App() {
         <SearchResult numbOfResult={character.length} loader={isLoading} />
       </Navbar>
       <div className="main">
-        {isLoading ? <Loader /> : <CharacterList characters={character} />}
-        <CharacterDetails />
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <CharacterList
+            characters={character}
+            selectedId={selectedId}
+            onSelectCharacter={handleSelectedCharacter}
+          />
+        )}
+        <CharacterDetails selectedId={selectedId} />
       </div>
     </div>
   );

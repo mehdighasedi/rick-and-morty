@@ -1,7 +1,52 @@
-import { character, episodes } from "../../data/data";
 import { HeartIcon } from "@heroicons/react/24/solid";
 import { ArrowUpCircleIcon } from "@heroicons/react/24/outline";
-function CharacterDetails() {
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Loader from "./Loader";
+import toast, { Toaster } from "react-hot-toast";
+
+function CharacterDetails({ selectedId }) {
+  const [character, setCharacter] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [episodes, setEpisodes] = useState([]);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setIsLoading(true);
+        const { data } = await axios.get(
+          `https://rickandmortyapi.com/api/character/${selectedId}`
+        );
+        setCharacter(data);
+
+        const episodeId = data.episode.map((e) => e.split("/").at(-1));
+
+        const { data: episodeData } = await axios.get(
+          `https://rickandmortyapi.com/api/episode/${episodeId}`
+        );
+        setEpisodes([episodeData].flat());
+      } catch (error) {
+        toast.error("There is a Problem With Fetcing Data!");
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    if (selectedId) fetchData();
+  }, [selectedId]);
+  if (isLoading)
+    return (
+      <div style={{ flex: "1" }}>
+        <Loader />
+      </div>
+    );
+  if (!character || !selectedId)
+    return (
+      <div className="character-details">
+        <h1 className="loader-text" style={{ flex: "1", margin: "auto" }}>
+          Please Select a Character
+        </h1>
+      </div>
+    );
   return (
     <div style={{ flex: 1 }}>
       <div className="character-detail">
