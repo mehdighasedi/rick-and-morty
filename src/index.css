@@ -66,16 +66,19 @@ button {
   color: var(--slate-100);
   font-weight: 700;
 }
-:-webkit-scrollbar-track {
+.added {
+  padding : .8rem 1rem;
+  border-radius: 1rem;
   background-color: var(--slate-700);
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: var(--slate-700);
-  }
-  ::-webkit-scrollbar-button {
-    background-color: var(--slate-700);
-  }
-
+  color: var(--slate-100);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+}
+.added span:first-child { 
+  margin-right: .2rem ;
+}
 .badge {
   white-space: nowrap;
   padding: 0.3rem 1rem;

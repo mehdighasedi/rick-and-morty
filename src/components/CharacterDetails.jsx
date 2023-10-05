@@ -1,14 +1,16 @@
-import { HeartIcon } from "@heroicons/react/24/solid";
+import { HeartIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
 import { ArrowUpCircleIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Loader from "./Loader";
 import toast, { Toaster } from "react-hot-toast";
 
-function CharacterDetails({ selectedId }) {
+function CharacterDetails({ selectedId, onAddFavourite, ifIsAdded }) {
   const [character, setCharacter] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [episodes, setEpisodes] = useState([]);
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -72,12 +74,24 @@ function CharacterDetails({ selectedId }) {
             <p>{character.location.name}</p>
           </div>
           <div className="actions">
-            <button className="btn btn--primary">
-              <span className="icon red">
-                <HeartIcon className="heart" />
-              </span>
-              Add To Favorite
-            </button>
+            {ifIsAdded ? (
+              <div className="added">
+                <span className="icon red">
+                  <CheckCircleIcon />
+                </span>
+                <span>Added To Favourites</span>
+              </div>
+            ) : (
+              <button
+                className="btn btn--primary"
+                onClick={() => onAddFavourite(character)}
+              >
+                <span className="icon red">
+                  <HeartIcon className="heart" />
+                </span>
+                Add To Favourite
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -88,17 +102,19 @@ function CharacterDetails({ selectedId }) {
             <ArrowUpCircleIcon className="icon" />
           </button>
         </div>
-        <ul>
-          {episodes.map((e, index) => (
-            <li key={e.id}>
-              <div>
-                {String(index + 1).padStart("2", 0)} - {e.episode} :
-                <strong> {e.name}</strong>
-              </div>
-              <div className="badge badge--secondary">{e.air_date}</div>
-            </li>
-          ))}
-        </ul>
+        <div>
+          <ul>
+            {episodes.map((e, index) => (
+              <li key={e.id}>
+                <div>
+                  {String(index + 1).padStart("2", 0)} - {e.episode} :
+                  <strong> {e.name}</strong>
+                </div>
+                <div className="badge badge--secondary">{e.air_date}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
