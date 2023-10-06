@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { SearchResult } from "./Components/Navbar";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
+import Modal from "./Components/Modal";
 
 function App() {
   const [character, setCharacter] = useState([]);
@@ -18,26 +19,37 @@ function App() {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [favourite, setFavourite] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
 
   const ifexisted = favourite.map((fav) => fav.id).includes(selectedId);
 
   useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
     async function fetchData() {
       try {
         setIsLoader(true);
         const { data } = await axios.get(
-          `https://rickandmortyapi.com/api/character/?name=${query}`
+          `https://rickandmortyapi.com/api/character/?name=${query}`,
+          { signal }
         );
         setCharacter(data.results.slice(0, 5));
       } catch (err) {
         // setCharacter([]);
-        toast.error(err.response.data.error);
+        if (!axios.isCancel()) {
+          setCharacter([]);
+          toast.error(err.response.data.error);
+        }
       } finally {
         setIsLoader(false);
       }
     }
 
     fetchData();
+
+    return () => {
+      controller.abort();
+    };
   }, [query]);
 
   const handleSelectedCharacter = (id) => {
@@ -48,6 +60,9 @@ function App() {
   };
   console.log(ifexisted);
   console.log(selectedId);
+  const handleOpen = () => {
+    setIsOpen(false);
+  };
   return (
     <div className="app">
       <Toaster
@@ -60,6 +75,7 @@ function App() {
           },
         }}
       />
+      <Modal title={"Title Modal Man"} open={isOpen} onOpen={handleOpen} />
       <Navbar>
         <Search query={query} setQuery={setQuery} />
         <SearchResult numbOfResult={character.length} loader={isLoading} />
