@@ -11,7 +11,6 @@ import { useEffect, useState } from "react";
 import { SearchResult } from "./Components/Navbar";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
-import Modal from "./Components/Modal";
 
 function App() {
   const [character, setCharacter] = useState([]);
@@ -19,7 +18,6 @@ function App() {
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
   const [favourite, setFavourite] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
 
   const ifexisted = favourite.map((fav) => fav.id).includes(selectedId);
 
@@ -60,8 +58,9 @@ function App() {
   };
   console.log(ifexisted);
   console.log(selectedId);
-  const handleOpen = () => {
-    setIsOpen(false);
+
+  const handleRemoveFavourite = (id) => {
+    setFavourite((prevFav) => prevFav.filter((fav) => fav.id !== id));
   };
   return (
     <div className="app">
@@ -75,11 +74,13 @@ function App() {
           },
         }}
       />
-      <Modal title={"Title Modal Man"} open={isOpen} onOpen={handleOpen} />
       <Navbar>
         <Search query={query} setQuery={setQuery} />
         <SearchResult numbOfResult={character.length} loader={isLoading} />
-        <Favourite numOfFavourites={favourite.length} />
+        <Favourite
+          favourites={favourite}
+          onRemoveFavourite={handleRemoveFavourite}
+        />
       </Navbar>
       <div className="main">
         {isLoading ? (
