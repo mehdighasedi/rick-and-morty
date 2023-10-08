@@ -17,7 +17,9 @@ function App() {
   const [isLoading, setIsLoader] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedId, setSelectedId] = useState(null);
-  const [favourite, setFavourite] = useState([]);
+  const [favourite, setFavourite] = useState(
+    () => JSON.parse(localStorage.getItem("FAVOURITES ITEM")) || []
+  );
 
   const ifexisted = favourite.map((fav) => fav.id).includes(selectedId);
 
@@ -49,6 +51,10 @@ function App() {
       controller.abort();
     };
   }, [query]);
+
+  useEffect(() => {
+    localStorage.setItem("FAVOURITES ITEM", JSON.stringify(favourite));
+  }, [favourite]);
 
   const handleSelectedCharacter = (id) => {
     setSelectedId((prevId) => (prevId === id ? null : id));
