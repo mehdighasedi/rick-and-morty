@@ -1,7 +1,7 @@
 import "./App.css";
 
-//icon
-
+//hooks
+import useCharacters from "./hooks/useCharacters";
 //components
 import CharacterDetails from "./Components/CharacterDetails";
 import CharacterList from "./Components/CharacterList";
@@ -9,52 +9,16 @@ import Navbar, { Favourite, Search } from "./Components/Navbar";
 import Loader from "./Components/Loader";
 import { useEffect, useState } from "react";
 import { SearchResult } from "./Components/Navbar";
-import toast, { Toaster } from "react-hot-toast";
-import axios from "axios";
+import { Toaster } from "react-hot-toast";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
-  const [character, setCharacter] = useState([]);
-  const [isLoading, setIsLoader] = useState(false);
   const [query, setQuery] = useState("");
+  const { character, isLoading } = useCharacters(query);
   const [selectedId, setSelectedId] = useState(null);
-  const [favourite, setFavourite] = useState(
-    () => JSON.parse(localStorage.getItem("FAVOURITES ITEM")) || []
-  );
+  const [favourite, setFavourite] = useLocalStorage("FAVOURITES ITEM", []);
 
   const ifexisted = favourite.map((fav) => fav.id).includes(selectedId);
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    async function fetchData() {
-      try {
-        setIsLoader(true);
-        const { data } = await axios.get(
-          `https://rickandmortyapi.com/api/character/?name=${query}`,
-          { signal }
-        );
-        setCharacter(data.results.slice(0, 5));
-      } catch (err) {
-        // setCharacter([]);
-        if (!axios.isCancel()) {
-          setCharacter([]);
-          toast.error(err.response.data.error);
-        }
-      } finally {
-        setIsLoader(false);
-      }
-    }
-
-    fetchData();
-
-    return () => {
-      controller.abort();
-    };
-  }, [query]);
-
-  useEffect(() => {
-    localStorage.setItem("FAVOURITES ITEM", JSON.stringify(favourite));
-  }, [favourite]);
 
   const handleSelectedCharacter = (id) => {
     setSelectedId((prevId) => (prevId === id ? null : id));

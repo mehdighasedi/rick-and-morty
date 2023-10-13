@@ -53,6 +53,7 @@ export function Favourite({ favourites, onRemoveFavourite }) {
         {!favourites.length ? (
           <p className="name"> 🤷‍♂️ There is no Favourite Character yet</p>
         ) : (
+          //mapped favourite to show like list
           favourites.map((item) => (
             <Character key={item.id} item={item}>
               <button
